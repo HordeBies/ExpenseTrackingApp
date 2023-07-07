@@ -1,4 +1,5 @@
-﻿using ExpenseTracking.Core.DTO;
+﻿using AutoMapper;
+using ExpenseTracking.Core.DTO;
 using ExpenseTracking.Core.ServiceContracts;
 using ExpenseTracking.Domain.Entities;
 using ExpenseTracking.Domain.RepositoryContracts;
@@ -15,7 +16,7 @@ using System.Threading.Tasks;
 
 namespace ExpenseTracking.Core.Services
 {
-    public class UserService(IUserRepository userRepository, UserManager<ApplicationUser> userManager, IConfiguration configuration) : IUserService
+    public class UserService(IUserRepository userRepository, UserManager<ApplicationUser> userManager, IConfiguration configuration, IMapper mapper) : IUserService
     {
         public async Task<bool> IsUniqueUser(string username)
         {
@@ -81,6 +82,19 @@ namespace ExpenseTracking.Core.Services
             {
                 throw new AggregateException("Multiple Errors Occured", result.Errors.Select(e => new Exception(e.Description)));
             }
+        }
+
+        public async Task<UserPreferencesReponse> GetUserPreferences(string userId)
+        {
+            var user = await userRepository.GetAsync(r => r.Id == userId,true);
+            return mapper.Map<UserPreferencesReponse>(user);
+        }
+
+        public async Task UpdateUserPreferences(UserPreferencesUpdateRequest request,string userId)
+        {
+            var user = await userRepository.GetAsync(r => r.Id == userId, true);
+            mapper.Map(request, user);
+            await userRepository.SaveAsync();
         }
     }
 }

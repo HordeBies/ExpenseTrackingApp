@@ -15,6 +15,9 @@ namespace ExpenseTracking.Infrastructure.DatabaseContexts
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+            modelBuilder.Entity<ApplicationUser>().Property(x => x.ReceiveDailyReports).HasDefaultValue(false);
+            modelBuilder.Entity<ApplicationUser>().Property(x => x.ReceiveWeeklyReports).HasDefaultValue(false);
+            modelBuilder.Entity<ApplicationUser>().Property(x => x.ReceiveMonthlyReports).HasDefaultValue(false);
         }
     }
     

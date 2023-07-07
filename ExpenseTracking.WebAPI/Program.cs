@@ -80,6 +80,8 @@ builder.Services.AddScoped<ITransactionRepository,TransactionRepository>();
 builder.Services.AddScoped<ITransactionService, TransactionService>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IUserService,UserService>();
+builder.Services.AddScoped<IEmailAttachmentSender, EmailSenderService>();
+builder.Services.AddScoped<IReportService, ReportService>();
 
 var app = builder.Build();
 
