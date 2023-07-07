@@ -1,3 +1,6 @@
+using ExpenseTracking.Core.Mappings;
+using ExpenseTracking.Core.ServiceContracts;
+using ExpenseTracking.Core.Services;
 using ExpenseTracking.Domain.Entities;
 using ExpenseTracking.Domain.RepositoryContracts;
 using ExpenseTracking.Infrastructure.DatabaseContexts;
@@ -45,8 +48,6 @@ builder.Services.AddSwaggerGen(options =>
         }
     });
 });
-// TODO: Add AutoMapper
-
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
@@ -72,7 +73,13 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddAutoMapper(typeof(MappingConfig));
+
 builder.Services.AddScoped<ITransactionRepository,TransactionRepository>();
+builder.Services.AddScoped<ITransactionService, TransactionService>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IUserService,UserService>();
 
 var app = builder.Build();
 
