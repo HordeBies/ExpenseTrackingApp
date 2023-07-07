@@ -105,6 +105,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+app.UseRequestTrackingMiddleware();
 app.UseHangfireDashboard();
 app.UseHttpsRedirection();
 
