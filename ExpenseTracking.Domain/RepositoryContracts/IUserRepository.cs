@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ExpenseTracking.Domain.RepositoryContracts
 {
-    public interface ITransactionRepository: IRepository<Transaction>
+    public interface IUserRepository : IRepository<ApplicationUser>
     {
     }
 }

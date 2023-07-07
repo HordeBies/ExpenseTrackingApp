@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace ExpenseTracking.Infrastructure.Repositories
 {
-    public class TransactionRepository(ApplicationDbContext db): Repository<Transaction>(db), ITransactionRepository
+    public class UserRepository(ApplicationDbContext db): Repository<ApplicationUser>(db), IUserRepository
     {
     }
 }
