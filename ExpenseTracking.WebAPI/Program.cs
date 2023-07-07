@@ -4,10 +4,13 @@ using ExpenseTracking.Core.Services;
 using ExpenseTracking.Domain.Entities;
 using ExpenseTracking.Domain.RepositoryContracts;
 using ExpenseTracking.Infrastructure.DatabaseContexts;
+using ExpenseTracking.Infrastructure.Initializers;
 using ExpenseTracking.Infrastructure.Repositories;
+using Hangfire;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
@@ -52,7 +55,13 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
+
 builder.Services.AddIdentity<ApplicationUser,IdentityRole>(options => options.SignIn.RequireConfirmedAccount = false).AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultTokenProviders();
+builder.Services.AddHangfire(options =>
+{
+    options.UseSqlServerStorage(builder.Configuration.GetConnectionString("HangfireConnection"));
+});
+builder.Services.AddHangfireServer();
 
 string key = builder.Configuration.GetValue<string>("ApiSettings:Secret")!;
 builder.Services.AddAuthentication(options =>
@@ -72,7 +81,7 @@ builder.Services.AddAuthentication(options =>
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(key))
     };
 });
-
+builder.Services.Configure<ScheduleSettings>(builder.Configuration.GetSection("ScheduleSettings"));
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddAutoMapper(typeof(MappingConfig));
 
@@ -82,7 +91,8 @@ builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IUserService,UserService>();
 builder.Services.AddScoped<IEmailAttachmentSender, EmailSenderService>();
 builder.Services.AddScoped<IReportService, ReportService>();
-
+builder.Services.AddScoped<HangfireInitializer>();
+builder.Services.AddScoped<ApplicationDbInitializer>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -91,7 +101,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
+app.UseHangfireDashboard();
 app.UseHttpsRedirection();
 
 app.UseAuthentication();
@@ -99,4 +109,18 @@ app.UseAuthorization();
 
 app.MapControllers();
 
+await InitializeDatabaseAndHangFire();
 app.Run();
+
+async Task InitializeDatabaseAndHangFire()
+{
+    using (var scope = app.Services.CreateScope())
+    {
+        var hangfireInitializer = scope.ServiceProvider.GetRequiredService<HangfireInitializer>();
+        await hangfireInitializer.Initialize();
+        var dbInitializer = scope.ServiceProvider.GetRequiredService<ApplicationDbInitializer>();
+        await dbInitializer.Initialize();
+    }
+}
+
+public partial class Program { }

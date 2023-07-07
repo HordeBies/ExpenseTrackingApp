@@ -2,7 +2,6 @@
 using ExpenseTracking.Core.ServiceContracts;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
 
 namespace ExpenseTracking.WebAPI.Controllers
 {

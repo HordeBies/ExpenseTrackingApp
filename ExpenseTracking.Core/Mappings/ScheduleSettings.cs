@@ -1,0 +1,18 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace ExpenseTracking.Core.Mappings
+{
+    public class ScheduleSettings
+    {
+        public string DailyScheduleTime { get; set; }
+        public string DailyJobId { get; set; }
+        public string WeeklyScheduleTime { get; set; }
+        public string WeeklyJobId { get; set; }
+        public string MonthlyScheduleTime { get; set; }
+        public string MonthlyJobId { get; set; }
+    }
+}
