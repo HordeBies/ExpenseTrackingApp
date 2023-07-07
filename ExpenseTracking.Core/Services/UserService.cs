@@ -6,13 +6,9 @@ using ExpenseTracking.Domain.RepositoryContracts;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
-using System;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Security.Claims;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace ExpenseTracking.Core.Services
 {
@@ -86,11 +82,11 @@ namespace ExpenseTracking.Core.Services
 
         public async Task<UserPreferencesReponse> GetUserPreferences(string userId)
         {
-            var user = await userRepository.GetAsync(r => r.Id == userId,true);
+            var user = await userRepository.GetAsync(r => r.Id == userId, true);
             return mapper.Map<UserPreferencesReponse>(user);
         }
 
-        public async Task UpdateUserPreferences(UserPreferencesUpdateRequest request,string userId)
+        public async Task UpdateUserPreferences(UserPreferencesUpdateRequest request, string userId)
         {
             var user = await userRepository.GetAsync(r => r.Id == userId, true);
             mapper.Map(request, user);

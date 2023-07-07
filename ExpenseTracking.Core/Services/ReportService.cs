@@ -29,12 +29,12 @@ namespace ExpenseTracking.Core.Services
                 {
                     workSheet.Cells[row, 1].Value = transaction.Id;
                     workSheet.Cells[row, 2].Value = transaction.Date.ToString("G");
-                    workSheet.Cells[row, 3].Value = transaction.Amount;
+                    workSheet.Cells[row, 3].Value = transaction.Amount.ToString("c");
                     workSheet.Cells[row, 4].Value = transaction.Description;
                     row++;
                 }
                 workSheet.Cells[$"A1:H{row}"].AutoFitColumns();
-
+                workSheet.Cells[$"A1:H{row}"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
                 await excelPackage.SaveAsync();
             }
             stream.Position = 0;

@@ -31,7 +31,7 @@ namespace ExpenseTracking.WebAPI.Controllers
         [HttpPut("{id:int}")]
         public async Task<ActionResult> UpdateTransaction(int id, TransactionUpdateRequest request)
         {
-            if(id != request.Id)
+            if (id != request.Id)
             {
                 return BadRequest();
             }

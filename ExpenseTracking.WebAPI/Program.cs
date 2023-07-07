@@ -6,11 +6,12 @@ using ExpenseTracking.Domain.RepositoryContracts;
 using ExpenseTracking.Infrastructure.DatabaseContexts;
 using ExpenseTracking.Infrastructure.Initializers;
 using ExpenseTracking.Infrastructure.Repositories;
+using ExpenseTracking.WebAPI.Filters.ExceptionFilters;
+using ExpenseTracking.WebAPI.Middlewares;
 using Hangfire;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
@@ -19,7 +20,10 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddControllers();
+builder.Services.AddControllers(options =>
+{
+    options.Filters.Add(typeof(ApiExceptionFilter));
+});
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
@@ -56,7 +60,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 
-builder.Services.AddIdentity<ApplicationUser,IdentityRole>(options => options.SignIn.RequireConfirmedAccount = false).AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultTokenProviders();
+builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = false).AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultTokenProviders();
 builder.Services.AddHangfire(options =>
 {
     options.UseSqlServerStorage(builder.Configuration.GetConnectionString("HangfireConnection"));
@@ -85,10 +89,10 @@ builder.Services.Configure<ScheduleSettings>(builder.Configuration.GetSection("S
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddAutoMapper(typeof(MappingConfig));
 
-builder.Services.AddScoped<ITransactionRepository,TransactionRepository>();
+builder.Services.AddScoped<ITransactionRepository, TransactionRepository>();
 builder.Services.AddScoped<ITransactionService, TransactionService>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
-builder.Services.AddScoped<IUserService,UserService>();
+builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IEmailAttachmentSender, EmailSenderService>();
 builder.Services.AddScoped<IReportService, ReportService>();
 builder.Services.AddScoped<HangfireInitializer>();

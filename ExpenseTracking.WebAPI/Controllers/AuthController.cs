@@ -1,6 +1,5 @@
 ﻿using ExpenseTracking.Core.DTO;
 using ExpenseTracking.Core.ServiceContracts;
-using ExpenseTracking.Core.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ExpenseTracking.WebAPI.Controllers
