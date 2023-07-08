@@ -27,12 +27,18 @@ namespace ExpenseTracking.WebAPI.Middlewares
 
                 var request = context.Request;
                 var response = context.Response;
-
+                if (request.Path.StartsWithSegments(new("/hangfire/stats")))
+                {
+                    // No need to log hangfire ping requests
+                }
+                else
+                {
                 _logger.LogInformation(
                     "Request: {requestMethod} {requestPath} | " +
                     "Response: {responseStatusCode} | " +
                     "Duration: {responseDuration} ms"
                     , request.Method, request.Path, response.StatusCode, stopwatch.Elapsed.TotalMilliseconds);
+                }
             }
         }
 

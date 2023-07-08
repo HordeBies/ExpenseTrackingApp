@@ -1,0 +1,70 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>ExpenseTracking.WebAPI</name>
+    </assembly>
+    <members>
+        <member name="M:ExpenseTracking.WebAPI.Controllers.AuthController.Register(ExpenseTracking.Core.DTO.UserRegisterRequest)">
+            <summary>
+            Registers a new user.
+            </summary>
+            <param name="request">The registration request.</param>
+            <returns>The registration response.</returns>
+        </member>
+        <member name="M:ExpenseTracking.WebAPI.Controllers.AuthController.GetToken(ExpenseTracking.Core.DTO.UserTokenRequest)">
+            <summary>
+            Generates a JWT Token for authentication.
+            </summary>
+            <param name="request">The login information.</param>
+            <returns>The token response.</returns>
+        </member>
+        <member name="M:ExpenseTracking.WebAPI.Controllers.TransactionController.GetTransactions">
+            <summary>
+            Retrieves all transactions for the authorized user.
+            </summary>
+            <returns>A list of transactions.</returns>
+        </member>
+        <member name="M:ExpenseTracking.WebAPI.Controllers.TransactionController.GetTransaction(System.Int32)">
+            <summary>
+            Retrieves a transaction by ID for the authorized user.
+            </summary>
+            <param name="id">The ID of the transaction.</param>
+            <returns>The transaction with the specified ID.</returns>
+        </member>
+        <member name="M:ExpenseTracking.WebAPI.Controllers.TransactionController.CreateTransaction(ExpenseTracking.Core.DTO.TransactionCreateRequest)">
+            <summary>
+            Creates a new transaction for the authorized user.
+            </summary>
+            <param name="request">The transaction create request.</param>
+            <returns>The created transaction.</returns>
+        </member>
+        <member name="M:ExpenseTracking.WebAPI.Controllers.TransactionController.UpdateTransaction(System.Int32,ExpenseTracking.Core.DTO.TransactionUpdateRequest)">
+            <summary>
+            Updates a transaction for the authorized user.
+            </summary>
+            <param name="id">The ID of the transaction.</param>
+            <param name="request">The transaction update request.</param>
+            <returns>No content.</returns>
+        </member>
+        <member name="M:ExpenseTracking.WebAPI.Controllers.TransactionController.DeleteTransaction(System.Int32)">
+            <summary>
+            Deletes a transaction for the authorized user.
+            </summary>
+            <param name="id">The ID of the transaction to delete.</param>
+            <returns>No content.</returns>
+        </member>
+        <member name="M:ExpenseTracking.WebAPI.Controllers.UserController.GetUserPreferences">
+            <summary>
+            Retrieves the preferences of the current user.
+            </summary>
+            <returns>The user's preferences.</returns>
+        </member>
+        <member name="M:ExpenseTracking.WebAPI.Controllers.UserController.UpdateUserPreferences(ExpenseTracking.Core.DTO.UserPreferencesUpdateRequest)">
+            <summary>
+            Updates the preferences of the current user.
+            </summary>
+            <param name="request">The updated user preferences.</param>
+            <returns>No content.</returns>
+        </member>
+    </members>
+</doc>

@@ -6,10 +6,18 @@ namespace ExpenseTracking.WebAPI.Controllers
 {
     [ApiController]
     [Route("api/auth")]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public class AuthController(IUserService userService) : ControllerBase
     {
+        /// <summary>
+        /// Registers a new user.
+        /// </summary>
+        /// <param name="request">The registration request.</param>
+        /// <returns>The registration response.</returns>
         [HttpPost("register")]
-        public async Task<ActionResult> Register([FromBody] UserRegisterRequest request)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<UserRegisterResponse>> Register([FromBody] UserRegisterRequest request)
         {
             bool isUserNameUnique = await userService.IsUniqueUser(request.Email);
             if (!isUserNameUnique)
@@ -19,7 +27,7 @@ namespace ExpenseTracking.WebAPI.Controllers
             try
             {
                 var response = await userService.Register(request);
-                return Ok(response);
+                return response;
             }
             catch (Exception ex) // Weak password, etc.
             {
@@ -27,15 +35,22 @@ namespace ExpenseTracking.WebAPI.Controllers
             }
         }
 
+        /// <summary>
+        /// Generates a JWT Token for authentication.
+        /// </summary>
+        /// <param name="request">The user credentials.</param>
+        /// <returns>The token response.</returns>
         [HttpPost("token")]
-        public async Task<ActionResult> GetToken([FromBody] UserTokenRequest request)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        public async Task<ActionResult<UserTokenResponse>> GetToken([FromBody] UserTokenRequest request)
         {
             var tokenResponse = await userService.GetToken(request);
             if (string.IsNullOrEmpty(tokenResponse.Token))
             {
                 return Unauthorized();
             }
-            return Ok(tokenResponse);
+            return tokenResponse;
         }
 
     }

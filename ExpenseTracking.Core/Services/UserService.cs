@@ -83,6 +83,10 @@ namespace ExpenseTracking.Core.Services
         public async Task<UserPreferencesReponse> GetUserPreferences(string userId)
         {
             var user = await userRepository.GetAsync(r => r.Id == userId, true);
+            if(user == null)
+            {
+                throw new Exception("User not found");
+            }
             return mapper.Map<UserPreferencesReponse>(user);
         }
 
@@ -90,6 +94,10 @@ namespace ExpenseTracking.Core.Services
         {
             var user = await userRepository.GetAsync(r => r.Id == userId, true);
             mapper.Map(request, user);
+            if (user == null)
+            {
+                throw new Exception("User not found");
+            }
             await userRepository.SaveAsync();
         }
     }
