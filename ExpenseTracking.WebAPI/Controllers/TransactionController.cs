@@ -47,7 +47,7 @@ namespace ExpenseTracking.WebAPI.Controllers
         public async Task<ActionResult<TransactionResponse>> CreateTransaction(TransactionCreateRequest request)
         {
             var response = await transactionService.CreateNewTransaction(request);
-            return CreatedAtAction(nameof(GetTransaction),new { id = response.Id});
+            return CreatedAtAction(nameof(GetTransaction),new { id = response.Id},response);
         }
         /// <summary>
         /// Updates a transaction for the authorized user.

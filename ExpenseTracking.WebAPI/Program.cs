@@ -15,12 +15,24 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Serilog;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
+//builder.Host.UseSerilog((HostBuilderContext context, IServiceProvider services, LoggerConfiguration loggerConfiguration) =>
+//{
+//    loggerConfiguration
+//    .ReadFrom.Configuration(context.Configuration)
+//    .ReadFrom.Services(services)
+//    .Filter.ByExcluding(c => c.Properties.Any(p => p.Value.ToString().Contains("hangfire/stats")));
+//});
+//builder.Services.AddHttpLogging(options =>
+//{
+//    options.LoggingFields = Microsoft.AspNetCore.HttpLogging.HttpLoggingFields.RequestProperties | Microsoft.AspNetCore.HttpLogging.HttpLoggingFields.ResponsePropertiesAndHeaders;
+//});
 builder.Services.AddControllers(options =>
 {
     options.Filters.Add(typeof(ApiExceptionFilter));
@@ -99,6 +111,7 @@ builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IEmailAttachmentSender, EmailSenderService>();
 builder.Services.AddScoped<IReportService, ReportService>();
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<HangfireInitializer>();
 builder.Services.AddScoped<ApplicationDbInitializer>();
 var app = builder.Build();

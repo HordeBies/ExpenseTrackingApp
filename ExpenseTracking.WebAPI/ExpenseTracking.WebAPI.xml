@@ -15,7 +15,7 @@
             <summary>
             Generates a JWT Token for authentication.
             </summary>
-            <param name="request">The login information.</param>
+            <param name="request">The user credentials.</param>
             <returns>The token response.</returns>
         </member>
         <member name="M:ExpenseTracking.WebAPI.Controllers.TransactionController.GetTransactions">
@@ -43,7 +43,7 @@
             Updates a transaction for the authorized user.
             </summary>
             <param name="id">The ID of the transaction.</param>
-            <param name="request">The transaction update request.</param>
+            <param name="request">The updated transaction.</param>
             <returns>No content.</returns>
         </member>
         <member name="M:ExpenseTracking.WebAPI.Controllers.TransactionController.DeleteTransaction(System.Int32)">

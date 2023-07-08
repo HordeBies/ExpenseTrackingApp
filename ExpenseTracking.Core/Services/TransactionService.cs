@@ -13,21 +13,45 @@ namespace ExpenseTracking.Core.Services
         private readonly ITransactionRepository transactionRepository;
         private readonly IMapper mapper;
         private readonly ClaimsPrincipal user;
+        private readonly IUnitOfWork unitOfWork;
         private string UserId => user.FindFirstValue(ClaimTypes.Name);
-        public TransactionService(IHttpContextAccessor httpContextAccessor, ITransactionRepository transactionRepository, IMapper mapper)
+        public TransactionService(IHttpContextAccessor httpContextAccessor, ITransactionRepository transactionRepository, IMapper mapper, IUnitOfWork unitOfWork)
         {
             user = (httpContextAccessor.HttpContext?.User) ?? throw new Exception("Client is not authorized");
 
             this.transactionRepository = transactionRepository;
             this.mapper = mapper;
+            this.unitOfWork = unitOfWork;
         }
         public async Task<TransactionResponse> CreateNewTransaction(TransactionCreateRequest request)
         {
-            var transaction = mapper.Map<Transaction>(request);
-            transaction.UserId = UserId;
-            await transactionRepository.CreateAsync(transaction);
-            await transactionRepository.SaveAsync();
-            return mapper.Map<TransactionResponse>(transaction);
+            try
+            {
+                unitOfWork.BeginTransaction();
+                var transaction = mapper.Map<Transaction>(request);
+                transaction.UserId = UserId;
+                await transactionRepository.CreateAsync(transaction);
+                await transactionRepository.SaveAsync();
+                // TODO: Comment these out. This is for db transaction failure case demo purposes.
+                //var t2 = new Transaction 
+                //{
+                //    Id = 999, // Gave id to create request
+                //    // Amount = 100, // Omitted required field
+                //    Date = DateTime.Now,
+                //    Description = "Test",
+                //    UserId = "1"
+                //};
+                //await transactionRepository.CreateAsync(t2);
+                //await transactionRepository.SaveAsync();
+                unitOfWork.Commit();
+                return mapper.Map<TransactionResponse>(transaction);
+
+            }
+            catch (Exception)
+            {
+                unitOfWork.Rollback();
+                throw;
+            }
         }
         public async Task<IEnumerable<TransactionResponse>> GetAllTransactions()
         {

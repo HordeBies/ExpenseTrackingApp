@@ -30,7 +30,7 @@ namespace ExpenseTracking.Core.Services
                 Content = new MimeContent(attachmentStream),
                 ContentDisposition = new ContentDisposition(ContentDisposition.Attachment),
                 ContentTransferEncoding = ContentEncoding.Base64,
-                FileName = Path.GetFileName(attachmentName)
+                FileName = attachmentName
             };
             var multipart = new Multipart("mixed")
             {

@@ -19,7 +19,14 @@ namespace ExpenseTracking.WebAPI.Filters.ExceptionFilters
             // Don't display exception details unless running in Development.
             if (_hostEnvironment.IsDevelopment())
             {
-                errors.Add(context.Exception.Message);
+                if (context.Exception.InnerException != null)
+                {
+                    errors.Add(context.Exception.InnerException.Message);
+                }
+                else
+                {
+                    errors.Add(context.Exception.Message);
+                }
             }
             else
             {
